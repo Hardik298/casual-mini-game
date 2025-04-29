@@ -15,4 +15,4 @@ MonoBehaviour:
   CategoryName: Animals
   CardBackSprite: {fileID: 0}
   CardFrontSprites: []
-  AllowedLayouts: 
+  AllowedLayouts: 0
