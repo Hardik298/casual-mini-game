@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Bombs
+  m_EditorClassIdentifier: Assembly-CSharp::GameDataDefinitions/CardCategoryData
+  CategoryName: Bombs
+  CardBackSprite: {fileID: 21300000, guid: ee057574cf903504da255101ed7eb0dd, type: 3}
+  CardFrontSprites:
+  - {fileID: 21300000, guid: 24cf6680a071c47d1825ccc9b5a6d141, type: 3}
+  - {fileID: 21300000, guid: fd37aef725f2041aaa4a9f16ce9d1810, type: 3}
+  - {fileID: 21300000, guid: e22839d65fdba4272a225f409bc6731f, type: 3}
+  - {fileID: 21300000, guid: c89e742fac69e4d8a8fbd1110a3749b4, type: 3}
+  - {fileID: 21300000, guid: e067041f0214446fdb9ac8c0216df75c, type: 3}
+  - {fileID: 21300000, guid: 88e68cc264fd848ee9d3f46378372d1e, type: 3}
+  - {fileID: 21300000, guid: 2a2a4eb51818d4b799ebb21229a84087, type: 3}
+  - {fileID: 21300000, guid: d7858249d20d641518901b4485d60b8b, type: 3}
+  - {fileID: 21300000, guid: b65b711a162b54517a519f11e95d03ff, type: 3}
+  AllowedLayouts: 15
+  CardSpacing: {x: 20, y: 20}

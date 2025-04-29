@@ -14,11 +14,12 @@ public static class GameDataDefinitions
     [System.Flags]
     public enum LayoutType
     {
-        Layout2x2,
-        Layout2x3,
-        Layout2x4,
-        Layout4x4,
-        Layout5x6,
+        None = 0,
+        Layout2x2 = 1 << 0, // 1
+        Layout2x3 = 1 << 1, // 2
+        Layout2x4 = 1 << 2, // 4
+        Layout4x4 = 1 << 3, // 8
+        Layout5x6 = 1 << 4, // 16
     }
 
     /// <summary>
@@ -38,5 +39,8 @@ public static class GameDataDefinitions
 
         [Tooltip("Allowed layouts for this category.")]
         public LayoutType AllowedLayouts;
+
+        [Tooltip("Spacing between cards (in pixels).")]
+        public Vector2 CardSpacing;
     }
 }

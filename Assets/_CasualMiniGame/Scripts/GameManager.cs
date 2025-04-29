@@ -14,9 +14,6 @@ public class GameManager : MonoBehaviour
     [Tooltip("Prefab to instantiate each card.")]
     [SerializeField] private Card cardPrefab;
 
-    [Tooltip("Spacing between cards (in pixels).")]
-    [SerializeField] private Vector2 cardSpacing = new Vector2(10f, 10f);
-
     private GameDataDefinitions.LayoutType selectedLayout;
     private GameDataDefinitions.CardCategoryData selectedCategory;
 
@@ -165,11 +162,11 @@ public class GameManager : MonoBehaviour
         Vector2 parentSize = boardParent.rect.size;
 
         // Calculate card size based on parent size, rows, columns, and spacing
-        float cardWidth = (parentSize.x - (columns - 1) * cardSpacing.x) / columns;
-        float cardHeight = (parentSize.y - (rows - 1) * cardSpacing.y) / rows;
+        float cardWidth = (parentSize.x - (columns - 1) * selectedCategory.CardSpacing.x) / columns;
+        float cardHeight = (parentSize.y - (rows - 1) * selectedCategory.CardSpacing.y) / rows;
 
         gridLayout.cellSize = new Vector2(cardWidth, cardHeight);
-        gridLayout.spacing = cardSpacing;
+        gridLayout.spacing = selectedCategory.CardSpacing;
         gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
         gridLayout.constraintCount = columns;
         gridLayout.childAlignment = TextAnchor.MiddleCenter;

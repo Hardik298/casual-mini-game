@@ -36,6 +36,12 @@ public class Card : MonoBehaviour
     {
         cardFrontSprite = frontSprite;
         cardBackSprite = backSprite;
-        frontCardImage.sprite = cardBackSprite; // Initially show the card back
+
+        frontCardImage.sprite = cardFrontSprite;
+        backCardImage.sprite = cardBackSprite;
+
+        frontCardImage.gameObject.SetActive(false);
+        backCardImage.gameObject.SetActive(true); // Initially show the card back
+        transform.rotation = Quaternion.identity;
     }
 }

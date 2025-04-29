@@ -13,6 +13,22 @@ MonoBehaviour:
   m_Name: Animals
   m_EditorClassIdentifier: Assembly-CSharp::GameDataDefinitions/CardCategoryData
   CategoryName: Animals
-  CardBackSprite: {fileID: 0}
-  CardFrontSprites: []
-  AllowedLayouts: 0
+  CardBackSprite: {fileID: 21300000, guid: ee057574cf903504da255101ed7eb0dd, type: 3}
+  CardFrontSprites:
+  - {fileID: 21300000, guid: 89008a1ab80664f1b8cee435a854363c, type: 3}
+  - {fileID: 21300000, guid: 935ea481ee5464af6acb711a7ec35a20, type: 3}
+  - {fileID: 21300000, guid: 60b9690520c1d44ba90cf894deade842, type: 3}
+  - {fileID: 21300000, guid: 8d81a08e0fb6e48588f683c4c61e5d0a, type: 3}
+  - {fileID: 21300000, guid: 99eb8cccbe55047dbb94aa7a30646141, type: 3}
+  - {fileID: 21300000, guid: 0a56c77136cf14b17a9e3a58afed8aac, type: 3}
+  - {fileID: 21300000, guid: 9546d95fc1a3e4695943d8ce8b5e46dd, type: 3}
+  - {fileID: 21300000, guid: 35c71f858e5eb4975bf57c12abc022c6, type: 3}
+  - {fileID: 21300000, guid: 95db946935f4d42e2a63e096382ed67d, type: 3}
+  - {fileID: 21300000, guid: 7cebae116bc9442f0be4fc86eb9e4fd9, type: 3}
+  - {fileID: 21300000, guid: 5b24caed65ed543e88c9de188af7d875, type: 3}
+  - {fileID: 21300000, guid: ea5b593900c90451d849e51c23c1d621, type: 3}
+  - {fileID: 21300000, guid: 3b8c7fd3f9dde4f9bb40db70e4797a43, type: 3}
+  - {fileID: 21300000, guid: f501d0612e03249edb0060ed67265549, type: 3}
+  - {fileID: 21300000, guid: 7cccf4c293a5248f48155c07b6066927, type: 3}
+  AllowedLayouts: -1
+  CardSpacing: {x: 20, y: 20}

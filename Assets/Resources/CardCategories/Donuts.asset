@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Donuts
+  m_EditorClassIdentifier: Assembly-CSharp::GameDataDefinitions/CardCategoryData
+  CategoryName: Donuts
+  CardBackSprite: {fileID: 21300000, guid: ee057574cf903504da255101ed7eb0dd, type: 3}
+  CardFrontSprites:
+  - {fileID: 21300000, guid: d7a799b04e0bf49ab9ab71bbbba97a7a, type: 3}
+  - {fileID: 21300000, guid: 7117b080f13fb4f2486ce2d6fb994dec, type: 3}
+  - {fileID: 21300000, guid: fcef34115cc014ac286b804889ecf14d, type: 3}
+  AllowedLayouts: 3
+  CardSpacing: {x: 20, y: 20}
