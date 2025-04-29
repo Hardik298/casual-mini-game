@@ -14,7 +14,9 @@ public class GameManager : MonoBehaviour
     [Tooltip("Prefab to instantiate each card.")]
     [SerializeField] private Card cardPrefab;
 
+    [Header("Managers")]
     [SerializeField] private CardMatchController matchController;
+    [SerializeField] private ScoreManager scoreManager;
 
     private GameDataDefinitions.LayoutType selectedLayout;
     private GameDataDefinitions.CardCategoryData selectedCategory;
@@ -27,9 +29,10 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         //For Testing
-        selectedLayout = GameDataDefinitions.LayoutType.Layout4x4;
+        selectedLayout = GameDataDefinitions.LayoutType.Layout5x6;
         selectedCategory = CategoryManager.Instance.GetRandomCategoryForLayout(selectedLayout);
 
+        scoreManager.ResetScore();
         InitializeBoard();
     }
 

@@ -7,6 +7,9 @@ using UnityEngine;
 /// </summary>
 public class CardMatchController : MonoBehaviour
 {
+    [Header("Managers")]
+    [SerializeField] private ScoreManager scoreManager;
+
     [Tooltip("Delay (in seconds) before flipping back unmatched cards.")]
     [SerializeField] private float mismatchDelay = 1.0f;
 
@@ -25,6 +28,7 @@ public class CardMatchController : MonoBehaviour
             return;
 
         waitingCards.Add(card);
+        scoreManager.IncreaseTurnCount();
 
         // Process cards in pairs immediately
         if (waitingCards.Count >= 2)
@@ -48,11 +52,13 @@ public class CardMatchController : MonoBehaviour
         {
             cardA.MatchCard();
             cardB.MatchCard();
+            scoreManager.RegisterMatch();
         }
         else
         {
             cardA.ResetCard();
             cardB.ResetCard();
+            scoreManager.RegisterMismatch();
         }
     }
 }
