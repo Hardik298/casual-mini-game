@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
   m_Name: Food
-  m_EditorClassIdentifier: Assembly-CSharp::GameDataDefinitions/CardCategoryData
+  m_EditorClassIdentifier: Assembly-CSharp::CardCategoryData
   CategoryName: Food
   CardBackSprite: {fileID: 21300000, guid: ee057574cf903504da255101ed7eb0dd, type: 3}
   CardFrontSprites:

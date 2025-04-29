@@ -22,8 +22,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private CardMatchController matchController;
     [SerializeField] private ScoreManager scoreManager;
 
-    private GameDataDefinitions.LayoutType selectedLayout;
-    private GameDataDefinitions.CardCategoryData selectedCategory;
+    private LayoutType selectedLayout;
+    private CardCategoryData selectedCategory;
 
     private List<Card> spawnedCards = new List<Card>();
 
@@ -33,8 +33,8 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         //For Testing
-        selectedLayout = GameDataDefinitions.LayoutType.Layout5x6;
-        selectedCategory = CategoryManager.Instance.GetRandomCategoryForLayout(selectedLayout);
+        //selectedLayout = GameDataDefinitions.LayoutType.Layout5x6;
+        //selectedCategory = CategoryManager.Instance.GetRandomCategoryForLayout(selectedLayout);
 
         scoreManager.ResetScore();
         InitializeBoard();
@@ -47,6 +47,19 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void InitializeBoard()
     {
+        // Retrieve the saved difficulty level (1 to 5), defaulting to 1 if not set
+        int difficultyLevel = PlayerPrefs.GetInt(GameDataDefinitions.GAME_DIFFICULTY, 1);
+
+        // Map difficulty level to a single LayoutType using bit shift (1 << (difficultyLevel - 1))
+        LayoutType selectedLayoutType = (LayoutType)(1 << (difficultyLevel - 1));
+        Debug.Log($"Selected Layout: {selectedLayoutType}");
+
+        // Store the layout for use in board generation
+        selectedLayout = selectedLayoutType;
+
+        // Fetch a random category that supports the selected layout
+        selectedCategory = CategoryManager.Instance.GetRandomCategoryForLayout(selectedLayout);
+
         // Safety Check
         if (selectedCategory == null || cardPrefab == null || boardParent == null)
         {
@@ -91,27 +104,27 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Determines the number of rows and columns based on the selected layout.
     /// </summary>
-    private void GetLayoutSize(GameDataDefinitions.LayoutType layout)
+    private void GetLayoutSize(LayoutType layout)
     {
         switch (layout)
         {
-            case GameDataDefinitions.LayoutType.Layout2x2:
+            case LayoutType.Layout2x2:
                 rows = 2;
                 columns = 2;
                 break;
-            case GameDataDefinitions.LayoutType.Layout2x3:
+            case LayoutType.Layout2x3:
                 rows = 2;
                 columns = 3;
                 break;
-            case GameDataDefinitions.LayoutType.Layout2x4:
+            case LayoutType.Layout2x4:
                 rows = 2;
                 columns = 4;
                 break;
-            case GameDataDefinitions.LayoutType.Layout4x4:
+            case LayoutType.Layout4x4:
                 rows = 4;
                 columns = 4;
                 break;
-            case GameDataDefinitions.LayoutType.Layout5x6:
+            case LayoutType.Layout5x6:
                 rows = 5;
                 columns = 6;
                 break;

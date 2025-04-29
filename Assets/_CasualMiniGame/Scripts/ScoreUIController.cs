@@ -56,7 +56,7 @@ public class ScoreUIController : MonoBehaviour
     /// <param name="score">The updated score value.</param>
     private void UpdateScoreText(int score)
     {
-        scoreText.text = $"Score: {score}";
+        scoreText.text = score.ToString();
     }
 
     /// <summary>
@@ -65,6 +65,6 @@ public class ScoreUIController : MonoBehaviour
     /// <param name="matchCount">The updated match count.</param>
     private void UpdateMatchCountText(int matchCount)
     {
-        matchCountText.text = $"Matches: {matchCount}";
+        matchCountText.text = matchCount.ToString();
     }
 }

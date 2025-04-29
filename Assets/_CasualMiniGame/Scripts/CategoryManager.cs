@@ -8,7 +8,7 @@ public class CategoryManager : MonoBehaviour
 {
     public static CategoryManager Instance { get; private set; }
 
-    private List<GameDataDefinitions.CardCategoryData> availableCategories;
+    private List<CardCategoryData> availableCategories;
 
     void Awake()
     {
@@ -26,8 +26,8 @@ public class CategoryManager : MonoBehaviour
     /// </summary>
     private void LoadCategories()
     {
-        availableCategories = new List<GameDataDefinitions.CardCategoryData>(
-            Resources.LoadAll<GameDataDefinitions.CardCategoryData>("CardCategories")
+        availableCategories = new List<CardCategoryData>(
+            Resources.LoadAll<CardCategoryData>("CardCategories")
         );
 
         Debug.Log($"Loaded {availableCategories.Count} card categories.");
@@ -38,9 +38,9 @@ public class CategoryManager : MonoBehaviour
     /// </summary>
     /// <param name="layoutType">The layout type we want to find categories for.</param>
     /// <returns>A list of categories that support the given layout.</returns>
-    public List<GameDataDefinitions.CardCategoryData> GetCategoriesForLayout(GameDataDefinitions.LayoutType layoutType)
+    public List<CardCategoryData> GetCategoriesForLayout(LayoutType layoutType)
     {
-        List<GameDataDefinitions.CardCategoryData> matchingCategories = new();
+        List<CardCategoryData> matchingCategories = new();
 
         foreach (var category in availableCategories)
         {
@@ -58,9 +58,9 @@ public class CategoryManager : MonoBehaviour
     /// </summary>
     /// <param name="layoutType">The layout type we want to find categories for.</param>
     /// <returns>A random category that supports the given layout, or null if none found.</returns>
-    public GameDataDefinitions.CardCategoryData GetRandomCategoryForLayout(GameDataDefinitions.LayoutType layoutType)
+    public CardCategoryData GetRandomCategoryForLayout(LayoutType layoutType)
     {
-        List<GameDataDefinitions.CardCategoryData> validCategories = GetCategoriesForLayout(layoutType);
+        List<CardCategoryData> validCategories = GetCategoriesForLayout(layoutType);
 
         if (validCategories.Count == 0)
         {
