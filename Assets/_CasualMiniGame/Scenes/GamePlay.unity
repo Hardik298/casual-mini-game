@@ -310,7 +310,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -526,9 +526,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   matchScore: 1
   comboBonus: 1
-  turnsText: {fileID: 2135985052}
-  matchesText: {fileID: 1382425914}
-  scoreText: {fileID: 1991171017}
 --- !u!4 &381476641
 Transform:
   m_ObjectHideFlags: 0
@@ -1095,6 +1092,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boardParent: {fileID: 205720269}
   cardPrefab: {fileID: 2214612626640805891, guid: f7fce186909a649aebf4855e1892a2bf, type: 3}
+  previewDuration: 2
   matchController: {fileID: 928482553}
   scoreManager: {fileID: 381476640}
 --- !u!4 &1987265852

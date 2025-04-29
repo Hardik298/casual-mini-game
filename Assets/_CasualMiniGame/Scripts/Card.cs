@@ -17,9 +17,10 @@ public class Card : MonoBehaviour
     private Sprite cardFrontSprite;  // The front sprite that the card will display after flipping
     private Sprite cardBackSprite;  // The back sprite that the card will display after reset
 
-    private bool isFlipped;
-    private bool isMatched;
-    private bool isFlipping;
+    private bool isFlipped = false;
+    private bool isMatched = false;
+    private bool isFlipping = false;
+    private bool isInteractable = false;
 
     public event System.Action<Card> OnCardFlipped; // Event will be triggered when a card is flipped to front.
 
@@ -48,11 +49,21 @@ public class Card : MonoBehaviour
     }
 
     /// <summary>
+    /// Changes card face from front to back and vice versa.
+    /// <param name="isCardInteractable">Toggles card interactability.</param>
+    /// </summary>
+    public void ChangeCardFace(bool cardInteractability)
+    {
+        isInteractable = cardInteractability;
+        StartCoroutine(CardFlipRoutine());
+    }
+
+    /// <summary>
     /// Starts the flip animation if not already flipping or matched.
     /// </summary>
     public void FlipCard()
     {
-        if (isFlipping || isMatched) return;
+        if (!isInteractable || isFlipping || isMatched) return;
         StartCoroutine(CardFlipRoutine());
     }
 
@@ -107,7 +118,7 @@ public class Card : MonoBehaviour
         frontCardImage.gameObject.SetActive(isFlipped);
         backCardImage.gameObject.SetActive(!isFlipped);
 
-        if (isFlipped)
+        if (isInteractable && isFlipped)
             OnCardFlipped?.Invoke(this);
 
         // Second half: rotate to full flip

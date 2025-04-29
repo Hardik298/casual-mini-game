@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,9 @@ public class GameManager : MonoBehaviour
 
     [Tooltip("Prefab to instantiate each card.")]
     [SerializeField] private Card cardPrefab;
+
+    [Tooltip("Duration in seconds to show all cards at game start before flipping them back.")]
+    [SerializeField] private float previewDuration = 2f;
 
     [Header("Managers")]
     [SerializeField] private CardMatchController matchController;
@@ -34,6 +38,8 @@ public class GameManager : MonoBehaviour
 
         scoreManager.ResetScore();
         InitializeBoard();
+
+        StartCoroutine(PreviewCardsThenPlay());
     }
 
     /// <summary>
@@ -176,5 +182,26 @@ public class GameManager : MonoBehaviour
         gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
         gridLayout.constraintCount = columns;
         gridLayout.childAlignment = TextAnchor.MiddleCenter;
+    }
+
+    /// <summary>
+    /// Coroutine that shows all card faces, then flips them back and enables interaction.
+    /// </summary>
+    private IEnumerator PreviewCardsThenPlay()
+    {
+        // Show all cards face-up for preview
+        foreach (var card in spawnedCards)
+        {
+            card.ChangeCardFace(false);
+        }
+
+        // Wait for preview duration
+        yield return new WaitForSeconds(previewDuration);
+
+        // Flip all cards back to start the game
+        foreach (var card in spawnedCards)
+        {
+            card.ChangeCardFace(true);
+        }
     }
 }
