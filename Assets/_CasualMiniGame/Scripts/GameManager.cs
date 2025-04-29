@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Manages the overall game flow: initialization, setup, and state transitions.
+/// Initializes and manages the game board layout and delegates card flipping to the match controller.
 /// </summary>
 public class GameManager : MonoBehaviour
 {
@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
 
     [Tooltip("Prefab to instantiate each card.")]
     [SerializeField] private Card cardPrefab;
+
+    [SerializeField] private CardMatchController matchController;
 
     private GameDataDefinitions.LayoutType selectedLayout;
     private GameDataDefinitions.CardCategoryData selectedCategory;
@@ -25,7 +27,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         //For Testing
-        selectedLayout = GameDataDefinitions.LayoutType.Layout2x2;
+        selectedLayout = GameDataDefinitions.LayoutType.Layout4x4;
         selectedCategory = CategoryManager.Instance.GetRandomCategoryForLayout(selectedLayout);
 
         InitializeBoard();
@@ -69,6 +71,7 @@ public class GameManager : MonoBehaviour
         {
             Card newCard = Instantiate(cardPrefab, boardParent);
             newCard.InitializeCard(selectedSprites[i], selectedCategory.CardBackSprite);
+            newCard.OnCardFlipped += matchController.RegisterCard;
             spawnedCards.Add(newCard);
         }
 

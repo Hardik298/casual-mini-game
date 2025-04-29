@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 
 /// <summary>
-/// Manages individual card behavior in the game.
+/// Handles card visuals, flipping animations, and state tracking (flipped, matched).
 /// </summary>
 public class Card : MonoBehaviour
 {
@@ -17,12 +17,14 @@ public class Card : MonoBehaviour
     private Sprite cardFrontSprite;  // The front sprite that the card will display after flipping
     private Sprite cardBackSprite;  // The back sprite that the card will display after reset
 
-    private RectTransform rectTransform;
+    private bool isFlipped;
+    private bool isMatched;
+    private bool isFlipping;
+
+    public event System.Action<Card> OnCardFlipped; // Event will be triggered when a card is flipped to front.
 
     private void Awake()
     {
-        rectTransform = GetComponent<RectTransform>();
-
         if (frontCardImage == null)
             frontCardImage = GetComponent<Image>(); // Fallback if not assigned
     }
@@ -43,5 +45,81 @@ public class Card : MonoBehaviour
         frontCardImage.gameObject.SetActive(false);
         backCardImage.gameObject.SetActive(true); // Initially show the card back
         transform.rotation = Quaternion.identity;
+    }
+
+    /// <summary>
+    /// Starts the flip animation if not already flipping or matched.
+    /// </summary>
+    public void FlipCard()
+    {
+        if (isFlipping || isMatched) return;
+        StartCoroutine(CardFlipRoutine());
+    }
+
+    /// <summary>
+    /// Resets the card to face-down state.
+    /// </summary>
+    public void ResetCard()
+    {
+        if (isMatched || isFlipping || !isFlipped) return;
+        StartCoroutine(CardFlipRoutine());
+    }
+
+    /// <summary>
+    /// Marks the card as matched and visually dims it.
+    /// </summary>
+    public void MatchCard()
+    {
+        isMatched = true;
+        frontCardImage.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.5f); // Semi-transparent match indicator
+    }
+
+    /// <summary>
+    /// Gets the card’s sprite used for matching.
+    /// </summary>
+    public Sprite GetCardFrontSprite() => cardFrontSprite;
+
+    /// <summary>
+    /// Smoothly rotates the card to flip it front/back.
+    /// </summary>
+    private IEnumerator CardFlipRoutine()
+    {
+        isFlipping = true;
+        float duration = 0.4f;
+        float halfTime = duration / 2f;
+        float elapsed = 0f;
+
+        Quaternion startRot = transform.rotation;
+        Quaternion midRot = Quaternion.Euler(0, 90, 0);
+        Quaternion endRot = isFlipped ? Quaternion.identity : Quaternion.Euler(0, 180, 0);
+
+        // First half: rotate to side
+        while (elapsed < halfTime)
+        {
+            transform.rotation = Quaternion.Slerp(startRot, midRot, elapsed / halfTime);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        // Toggle face state at 90°
+        transform.rotation = midRot;
+        isFlipped = !isFlipped;
+        frontCardImage.gameObject.SetActive(isFlipped);
+        backCardImage.gameObject.SetActive(!isFlipped);
+
+        if (isFlipped)
+            OnCardFlipped?.Invoke(this);
+
+        // Second half: rotate to full flip
+        elapsed = 0f;
+        while (elapsed < halfTime)
+        {
+            transform.rotation = Quaternion.Slerp(midRot, endRot, elapsed / halfTime);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.rotation = endRot;
+        isFlipping = false;
     }
 }
