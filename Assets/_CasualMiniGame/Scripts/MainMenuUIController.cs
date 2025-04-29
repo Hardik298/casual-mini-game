@@ -5,7 +5,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Handles interactions with main menu options
 /// </summary>
-public class MainMenuManager : MonoBehaviour
+public class MainMenuUIController : MonoBehaviour
 {
     [SerializeField] private string gamePlaySceneName; // Name of the gameplay scene to load
     [SerializeField] private ToggleGroup gameDifficultyToggleGroup; // Toggle group for difficulty level selection
