@@ -184,6 +184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 671d6f95d78b4469db3d0b0d3efb4703, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  frontCardBackgroundImage: {fileID: 2214612627477639632}
   frontCardImage: {fileID: 7135716565860996372}
   backCardImage: {fileID: 2214612626082439359}
 --- !u!1 &2214612627477639638

@@ -8,6 +8,9 @@ using System.Collections;
 public class Card : MonoBehaviour
 {
     [Header("Card Settings")]
+    [Tooltip("The image component for background of front side of card.")]
+    [SerializeField] private Image frontCardBackgroundImage; // Image component for the card
+
     [Tooltip("The image component for front side of card.")]
     [SerializeField] private Image frontCardImage; // Image component for the card
 
@@ -21,6 +24,8 @@ public class Card : MonoBehaviour
     private bool isMatched = false;
     private bool isFlipping = false;
     private bool isInteractable = false;
+
+    public string CategoryName { get; private set; } // Assigned during board creation
 
     public event System.Action<Card> OnCardFlipped; // Event will be triggered when a card is flipped to front.
 
@@ -54,8 +59,17 @@ public class Card : MonoBehaviour
     /// </summary>
     public void ChangeCardFace(bool cardInteractability)
     {
-        isInteractable = cardInteractability;
+        SetCardInteractability(cardInteractability);
         StartCoroutine(CardFlipRoutine());
+    }
+
+    /// <summary>
+    /// Changes card face from front to back and vice versa.
+    /// <param name="isCardInteractable">Toggles card interactability.</param>
+    /// </summary>
+    public void SetCardInteractability(bool cardInteractability)
+    {
+        isInteractable = cardInteractability;
     }
 
     /// <summary>
@@ -79,16 +93,34 @@ public class Card : MonoBehaviour
     /// <summary>
     /// Marks the card as matched and visually dims it.
     /// </summary>
-    public void MatchCard()
+    public void MatchCard(bool isDirectSet)
     {
         isMatched = true;
-        frontCardImage.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.5f); // Semi-transparent match indicator
+        isInteractable = false;
+
+        if (isDirectSet)
+        {
+            isFlipped = true;
+            frontCardBackgroundImage.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0f); // Semi-transparent match indicator
+            frontCardImage.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0f); // Semi-transparent match indicator
+            backCardImage.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0f); // Semi-transparent match indicator
+        }
+        else
+        {
+            // TODO Proper smooth animation
+            frontCardBackgroundImage.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0f); // Semi-transparent match indicator
+            frontCardImage.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0f); // Semi-transparent match indicator
+            backCardImage.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0f); // Semi-transparent match indicator
+        }
     }
 
     /// <summary>
-    /// Gets the card’s sprite used for matching.
+    /// Returns a unique key combining category and sprite name.
     /// </summary>
-    public Sprite GetCardFrontSprite() => cardFrontSprite;
+    public string GetCategorySpriteKey()
+    {
+        return $"{CategoryName}_{cardFrontSprite.name}";
+    }
 
     /// <summary>
     /// Smoothly rotates the card to flip it front/back.

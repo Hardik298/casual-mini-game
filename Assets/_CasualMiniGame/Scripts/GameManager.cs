@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,7 +20,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float previewDuration = 2f;
 
     [Header("Managers")]
-    [SerializeField] private CardMatchController matchController;
+    [SerializeField] private CardMatchController cardMatchController;
     [SerializeField] private ScoreManager scoreManager;
 
     private LayoutType selectedLayout;
@@ -37,9 +38,17 @@ public class GameManager : MonoBehaviour
         //selectedCategory = CategoryManager.Instance.GetRandomCategoryForLayout(selectedLayout);
 
         scoreManager.ResetScore();
-        InitializeBoard();
 
-        StartCoroutine(PreviewCardsThenPlay());
+        bool hasSaveFile = (PlayerPrefs.GetInt(GameDataDefinitions.GAME_SAVE_FILE, 0) == 0) ? false : true;
+        if (hasSaveFile)
+        {
+            GameProgressManager.Instance.LoadGame();
+        }
+        else
+        {
+            InitializeBoard();
+            StartCoroutine(PreviewCardsThenPlay());
+        }
     }
 
     /// <summary>
@@ -93,7 +102,7 @@ public class GameManager : MonoBehaviour
         {
             Card newCard = Instantiate(cardPrefab, boardParent);
             newCard.InitializeCard(selectedSprites[i], selectedCategory.CardBackSprite);
-            newCard.OnCardFlipped += matchController.RegisterCard;
+            newCard.OnCardFlipped += cardMatchController.RegisterCard;
             spawnedCards.Add(newCard);
         }
 
@@ -216,5 +225,83 @@ public class GameManager : MonoBehaviour
         {
             card.ChangeCardFace(true);
         }
+    }
+
+    public List<string> GetSpawnedCardKeys()
+    {
+        var list = spawnedCards.Select(card => card.GetCategorySpriteKey()).ToList();
+        return list;
+    }
+
+    public string GetCardCategoryName()
+    {
+        return selectedCategory.CategoryName;
+    }
+
+    public LayoutType GetLayoutType()
+    {
+        return selectedLayout;
+    }
+
+    public void LoadGameData(GameData data)
+    {
+        // Store the layout for use in board generation
+        selectedLayout = data.selectedLayout;
+
+        // Fetch and assign selected card category scriptable object
+        selectedCategory = CategoryManager.Instance.GetCategoryByName(data.selectedCategoryName);
+
+        // Safety Check
+        if (selectedCategory == null || cardPrefab == null || boardParent == null)
+        {
+            // TODO Restart the game from main menu with warning UI prompt as well.
+            Debug.LogError("Corrupted Data!");
+            return;
+        }
+
+        // Get layout size (rows, columns) based on layout enum
+        GetLayoutSize(selectedLayout);
+
+        foreach (var key in data.spawnedCardIds)
+        {
+            var parts = key.Split('_');
+            if (parts.Length != 2) continue;
+
+            string cardSpriteName = parts[1];
+
+            Sprite cardSprite = selectedCategory.GetSpriteByName(cardSpriteName);
+            if (cardSprite == null)
+            {
+                // TODO Restart the game from main menu with warning UI prompt as well.
+                Debug.LogWarning($"Sprite '{cardSpriteName}' not found in category '{data.selectedCategoryName}'.");
+                continue;
+            }
+
+            Card newCard = Instantiate(cardPrefab, boardParent);
+            newCard.InitializeCard(cardSprite, selectedCategory.CardBackSprite);
+            newCard.OnCardFlipped += cardMatchController.RegisterCard;
+            spawnedCards.Add(newCard);
+
+            if (data.matchedCardIds.Contains(newCard.GetCategorySpriteKey()))
+                cardMatchController.LoadMatchedCards(newCard);
+
+            if (data.waitingCardIds.Contains(newCard.GetCategorySpriteKey()))
+                cardMatchController.LoadPendingMatchEvalutionCards(newCard);
+        }
+
+        // Arrange cards in grid
+        ArrangeCardsInGrid();
+
+        scoreManager.LoadProgress(data.turnCount, data.totalScore, data.matchCount, data.currentCombo);
+
+        cardMatchController.InitiateWaitingCardsMatchMaking();
+
+        foreach(Card card in spawnedCards)
+            card.SetCardInteractability(true);
+    }
+
+    private void OnApplicationQuit()
+    {
+        GameProgressManager.Instance.Save();
     }
 }

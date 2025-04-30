@@ -1289,7 +1289,7 @@ MonoBehaviour:
   boardParent: {fileID: 205720269}
   cardPrefab: {fileID: 2214612626640805891, guid: f7fce186909a649aebf4855e1892a2bf, type: 3}
   previewDuration: 2
-  matchController: {fileID: 928482553}
+  cardMatchController: {fileID: 928482553}
   scoreManager: {fileID: 381476640}
 --- !u!4 &1987265852
 Transform:

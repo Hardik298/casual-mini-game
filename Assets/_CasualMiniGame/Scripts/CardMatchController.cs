@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -19,6 +20,17 @@ public class CardMatchController : MonoBehaviour
     private List<Card> waitingCards = new();
 
     /// <summary>
+    /// Matched cards.
+    /// </summary>
+    private List<Card> matchedCards = new();
+
+    /// <summary>
+    /// Cards waiting to be evaluted.
+    /// This list will help while saving and loading not evaluted cards data to save file.
+    /// </summary>
+    private List<Card> pendingMatchEvalutionCards = new();
+
+    /// <summary>
     /// Called when a card is flipped; enqueues for matching.
     /// </summary>
     /// <param name="card">The newly flipped card.</param>
@@ -28,6 +40,7 @@ public class CardMatchController : MonoBehaviour
             return;
 
         waitingCards.Add(card);
+        pendingMatchEvalutionCards.Add(card);
         scoreManager.IncreaseTurnCount();
 
         // Process cards in pairs immediately
@@ -48,10 +61,12 @@ public class CardMatchController : MonoBehaviour
     {
         yield return new WaitForSeconds(mismatchDelay);
 
-        if (cardA.GetCardFrontSprite() == cardB.GetCardFrontSprite())
+        if (cardA.GetCategorySpriteKey() == cardB.GetCategorySpriteKey())
         {
-            cardA.MatchCard();
-            cardB.MatchCard();
+            cardA.MatchCard(false);
+            cardB.MatchCard(false);
+            matchedCards.Add(cardA);
+            matchedCards.Add(cardB);
             scoreManager.RegisterMatch();
         }
         else
@@ -59,6 +74,43 @@ public class CardMatchController : MonoBehaviour
             cardA.ResetCard();
             cardB.ResetCard();
             scoreManager.RegisterMismatch();
+        }
+
+        pendingMatchEvalutionCards.Remove(cardA);
+        pendingMatchEvalutionCards.Remove(cardB);
+    }
+
+    public List<string> GetMatchedCardsKeys()
+    {
+        return matchedCards.Select(card => card.GetCategorySpriteKey()).ToList();
+    }
+
+    public List<string> GetPendingMatchEvalutionCardsKeys()
+    {
+        return pendingMatchEvalutionCards.Select(card => card.GetCategorySpriteKey()).ToList();
+    }
+
+    public void LoadMatchedCards(Card matchedCard)
+    {
+        matchedCards.Add(matchedCard);
+        matchedCard.MatchCard(true);
+    }
+
+    public void LoadPendingMatchEvalutionCards(Card waitingCard)
+    {
+        waitingCards.Add(waitingCard);
+        pendingMatchEvalutionCards.Add(waitingCard);
+    }
+
+    public void InitiateWaitingCardsMatchMaking()
+    {
+        while (waitingCards.Count >= 2)
+        {
+            Card cardA = waitingCards[0];
+            Card cardB = waitingCards[1];
+            waitingCards.RemoveRange(0, 2);
+
+            StartCoroutine(EvaluateMatch(cardA, cardB));
         }
     }
 }

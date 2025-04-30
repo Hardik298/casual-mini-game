@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 /// <summary>
 /// Central definitions for game data models.
@@ -9,6 +10,9 @@ public static class GameDataDefinitions
 {
     // Key used to store and retrieve the selected game difficulty level from PlayerPrefs.
     public const string GAME_DIFFICULTY = "PLAYER_PREF_DIFFICULTY";
+
+    // Key used to store and retrieve the selected game difficulty level from PlayerPrefs.
+    public const string GAME_SAVE_FILE = "PLAYER_PREF_GAME_SAVE_FILE";
 }
 
 /// <summary>
@@ -16,6 +20,7 @@ public static class GameDataDefinitions
 /// The EnumFlags attribute will allow multiple layouts to be selected.
 /// </summary>
 [System.Flags]
+[System.Serializable]
 public enum LayoutType
 {
     None = 0,
@@ -46,4 +51,38 @@ public class CardCategoryData : ScriptableObject
 
     [Tooltip("Spacing between cards (in pixels).")]
     public Vector2 CardSpacing;
+
+    public Sprite GetSpriteByName(string spriteName)
+    {
+        return CardFrontSprites.FirstOrDefault(sprite => sprite.name == spriteName);
+    }
+}
+
+/// <summary>
+/// Serializable data class that holds the persistent state of the game.
+/// </summary>
+[System.Serializable]
+public class GameData
+{
+    public LayoutType selectedLayout;
+    public string selectedCategoryName;
+    public int turnCount;
+    public int matchCount;
+    public int totalScore;
+    public int currentCombo;
+
+    public List<string> spawnedCardIds = new List<string>();
+    public List<string> waitingCardIds = new List<string>();
+    public List<string> matchedCardIds = new List<string>();
+}
+
+/// <summary>
+/// Defines a contract for game save and load functionality.
+/// </summary>
+public interface ISaveService
+{
+    void SaveGame(GameData data);
+    GameData LoadGame();
+    bool HasSavedGame();
+    void DeleteSavedGame();
 }

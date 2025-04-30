@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 /// <summary>
 /// Handles loading and managing card categories.
@@ -69,5 +70,16 @@ public class CategoryManager : MonoBehaviour
         }
 
         return validCategories[Random.Range(0, validCategories.Count)];
+    }
+
+    /// <summary>
+    /// Returns the category by its name.
+    /// </summary>
+    /// <param name="categoryName">The name of the category to find.</param>
+    /// <returns>The CardCategoryData if found, null otherwise.</returns>
+    public CardCategoryData GetCategoryByName(string categoryName)
+    {
+        var cardCategoryData = availableCategories.Find(x => x.CategoryName == categoryName);
+        return cardCategoryData;
     }
 }

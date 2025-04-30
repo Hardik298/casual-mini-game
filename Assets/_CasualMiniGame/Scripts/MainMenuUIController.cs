@@ -16,6 +16,32 @@ public class MainMenuUIController : MonoBehaviour
     /// </summary>
     public void OnPlayButtonClicked()
     {
+        bool hasSaveFile = (PlayerPrefs.GetInt(GameDataDefinitions.GAME_SAVE_FILE, 0) == 0) ? false : true;
+        if (hasSaveFile)
+        {
+            GameObject popUp = Instantiate(Resources.Load<GameObject>("ConsentPopUp"));
+            popUp.GetComponent<ConsentPopUp>().Setup("Do you want to continue your last game?", OnResumeGameConfirmationPopUpYesBtnClicked, OnResumeGameConfirmationPopUpNoBtnClicked);
+        }
+        else
+        {
+            StartNewGame();
+        }
+    }
+
+    void OnResumeGameConfirmationPopUpYesBtnClicked()
+    {
+        // Load the gameplay scene
+        SceneManagerController.Instance.LoadScene(gamePlaySceneName);
+    }
+
+    void OnResumeGameConfirmationPopUpNoBtnClicked()
+    {
+        GameProgressManager.Instance.DeleteSave();
+        StartNewGame();
+    }
+
+    private void StartNewGame()
+    {
         // Get the currently active toggle from the toggle group
         var activeToggle = gameDifficultyToggleGroup.ActiveToggles().FirstOrDefault();
 
@@ -28,5 +54,4 @@ public class MainMenuUIController : MonoBehaviour
         // Load the gameplay scene
         SceneManagerController.Instance.LoadScene(gamePlaySceneName);
     }
-
 }
