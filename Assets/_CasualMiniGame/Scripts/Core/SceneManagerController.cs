@@ -21,6 +21,7 @@ public class SceneManagerController : MonoBehaviour
         {
             _instance = this;
             DontDestroyOnLoad(gameObject);
+            Debug.unityLogger.logEnabled = false; // disables logging (for game security purpose in distribution build)
         }
         else
         {

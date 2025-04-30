@@ -31,33 +31,34 @@ public class GameManager : MonoBehaviour
     private int rows;
     private int columns;
 
+    private bool isGameOver = false;
+
     // Event will be triggered when game is over
     public event System.Action OnGameOver;
 
     private void OnEnable()
     {
-        cardMatchController.OnCardMatched += CheckGameOverConditions;
+        // Subscribe events
+        cardMatchController.OnCardMatched += CheckGameOverConditions; // Receiving and Handling of card match event
     }
 
     private void OnDisable()
     {
+        // Unsubscribe events
         cardMatchController.OnCardMatched -= CheckGameOverConditions;
     }
 
     private void Start()
     {
-        //For Testing
-        //selectedLayout = GameDataDefinitions.LayoutType.Layout5x6;
-        //selectedCategory = CategoryManager.Instance.GetRandomCategoryForLayout(selectedLayout);
+        scoreManager.ResetScore(); // Resets score at start of the game
 
-        scoreManager.ResetScore();
-
+        // Checks if there is any valid save file
         bool hasSaveFile = (PlayerPrefs.GetInt(GameDataDefinitions.GAME_SAVE_FILE, 0) == 0) ? false : true;
         if (hasSaveFile)
         {
-            GameProgressManager.Instance.LoadGame();
+            GameProgressManager.Instance.LoadGame(); // Loads saved game
         }
-        else
+        else // Starts new game
         {
             InitializeBoard();
             StartCoroutine(PreviewCardsThenPlay());
@@ -240,22 +241,34 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Returns string list of spawnedCards list.
+    /// </summary>
     public List<string> GetSpawnedCardKeys()
     {
         var list = spawnedCards.Select(card => card.GetCategorySpriteKey()).ToList();
         return list;
     }
 
+    /// <summary>
+    /// Returns CardCategoryName as string.
+    /// </summary>
     public string GetCardCategoryName()
     {
         return selectedCategory.CategoryName;
     }
 
+    /// <summary>
+    /// Returns selectedLayout as assigned value of LayoutType enum.
+    /// </summary>
     public LayoutType GetLayoutType()
     {
         return selectedLayout;
     }
 
+    /// <summary>
+    /// Loads the game data from save file.
+    /// </summary>
     public void LoadGameData(GameData data)
     {
         // Store the layout for use in board generation
@@ -275,6 +288,7 @@ public class GameManager : MonoBehaviour
         // Get layout size (rows, columns) based on layout enum
         GetLayoutSize(selectedLayout);
 
+        // Spawning all the cards in game board
         foreach (var key in data.spawnedCardIds)
         {
             var parts = key.Split('_');
@@ -295,9 +309,11 @@ public class GameManager : MonoBehaviour
             newCard.OnCardFlipped += cardMatchController.RegisterCard;
             spawnedCards.Add(newCard);
 
+            // Loading matched cards
             if (data.matchedCardIds.Contains(newCard.GetCategorySpriteKey()))
                 cardMatchController.LoadMatchedCards(newCard);
 
+            // Loading waiting cards
             if (data.waitingCardIds.Contains(newCard.GetCategorySpriteKey()))
                 cardMatchController.LoadPendingMatchEvalutionCards(newCard);
         }
@@ -305,24 +321,36 @@ public class GameManager : MonoBehaviour
         // Arrange cards in grid
         ArrangeCardsInGrid();
 
+        // Loading score progress
         scoreManager.LoadProgress(data.turnCount, data.totalScore, data.matchCount, data.currentCombo);
 
+        // Starts matchmaking of cards in waitingCards list
         cardMatchController.InitiateWaitingCardsMatchMaking();
 
+        // Set interactibility to true for not opened cards
         foreach(Card card in spawnedCards)
             card.SetCardInteractability(true);
     }
 
+    /// <summary>
+    /// This will be received when user kills application.
+    /// </summary>
     private void OnApplicationQuit()
     {
-        GameProgressManager.Instance.Save();
+        if(!isGameOver)
+            GameProgressManager.Instance.Save(); // saving game file
     }
 
+    /// <summary>
+    /// Checks game over conditions.
+    /// </summary>
     private void CheckGameOverConditions(int matchedCardsCount)
     {
         if(spawnedCards.Count == matchedCardsCount)
         {
+            isGameOver = true;
             SoundManager.Instance.PlaySFX(SFXType.GameOver);
+            GameProgressManager.Instance.DeleteSave();
             OnGameOver?.Invoke();
         }
     }

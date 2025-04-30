@@ -11,8 +11,9 @@ public class MainMenuUIController : MonoBehaviour
     [SerializeField] private ToggleGroup gameDifficultyToggleGroup; // Toggle group for difficulty level selection
 
     /// <summary>
-    /// Called when the Play button is clicked.
-    /// Stores the selected difficulty level in PlayerPrefs and loads the gameplay scene.
+    /// Called when the Play button is clicked. 
+    /// If there is a saved game, it prompts the user with a popup asking if they want to resume their last game or start a new one.
+    /// If there is no saved game, it starts a new game directly.
     /// </summary>
     public void OnPlayButtonClicked()
     {
@@ -30,14 +31,13 @@ public class MainMenuUIController : MonoBehaviour
 
     void OnResumeGameConfirmationPopUpYesBtnClicked()
     {
-        // Load the gameplay scene
-        SceneManagerController.Instance.LoadScene(gamePlaySceneName);
+        SceneManagerController.Instance.LoadScene(gamePlaySceneName); // Load the gameplay scene
     }
 
     void OnResumeGameConfirmationPopUpNoBtnClicked()
     {
         GameProgressManager.Instance.DeleteSave();
-        StartNewGame();
+        StartNewGame(); // Starts new game
     }
 
     private void StartNewGame()

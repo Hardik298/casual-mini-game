@@ -134,7 +134,7 @@ public class ScoreManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Restores score, match count, and combo from saved data.
+    /// Restores turn count, score, match count, and combo from saved data.
     /// </summary>
     public void LoadProgress(int savedTurnCount, int savedScore, int savedMatchCount, int savedCombo)
     {

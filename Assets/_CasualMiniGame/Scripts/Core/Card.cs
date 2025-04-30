@@ -108,10 +108,9 @@ public class Card : MonoBehaviour
         }
         else
         {
-            // TODO Proper smooth animation
-            frontCardBackgroundImage.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0f); // Semi-transparent match indicator
-            frontCardImage.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0f); // Semi-transparent match indicator
-            backCardImage.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0f); // Semi-transparent match indicator
+            StartCoroutine(FadeOutImageRoutine(frontCardBackgroundImage.GetComponent<Image>(), 1f));
+            StartCoroutine(FadeOutImageRoutine(frontCardImage.GetComponent<Image>(), 1f));
+            StartCoroutine(FadeOutImageRoutine(backCardImage.GetComponent<Image>(), 1f));
         }
     }
 
@@ -166,4 +165,26 @@ public class Card : MonoBehaviour
         transform.rotation = endRot;
         isFlipping = false;
     }
+
+    /// <summary>
+    /// Smoothly fades out the image.
+    /// </summary>
+    private IEnumerator FadeOutImageRoutine(Image image, float duration)
+    {
+        Color originalColor = image.color;
+        float startAlpha = originalColor.a;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            float newAlpha = Mathf.Lerp(startAlpha, 0f, elapsedTime / duration);
+            image.color = new Color(originalColor.r, originalColor.g, originalColor.b, newAlpha);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // Ensure it's fully transparent at the end
+        image.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+    }
+
 }
