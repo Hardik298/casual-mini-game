@@ -78,6 +78,7 @@ public class Card : MonoBehaviour
     public void FlipCard()
     {
         if (!isInteractable || isFlipping || isMatched) return;
+        SoundManager.Instance.PlaySFX(SFXType.CardFlip);
         StartCoroutine(CardFlipRoutine());
     }
 

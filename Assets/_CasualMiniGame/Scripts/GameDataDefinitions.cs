@@ -86,3 +86,15 @@ public interface ISaveService
     bool HasSavedGame();
     void DeleteSavedGame();
 }
+
+/// <summary>
+/// Contains types of sfxs.
+/// It's extendable by adding more sfx types here and set it in SFXDatabase.
+/// </summary>
+public enum SFXType
+{
+    CardFlip,
+    Match,
+    Mismatch,
+    GameOver
+}

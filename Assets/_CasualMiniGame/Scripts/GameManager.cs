@@ -31,6 +31,19 @@ public class GameManager : MonoBehaviour
     private int rows;
     private int columns;
 
+    // Event will be triggered when game is over
+    public event System.Action OnGameOver;
+
+    private void OnEnable()
+    {
+        cardMatchController.OnCardMatched += CheckGameOverConditions;
+    }
+
+    private void OnDisable()
+    {
+        cardMatchController.OnCardMatched -= CheckGameOverConditions;
+    }
+
     private void Start()
     {
         //For Testing
@@ -303,5 +316,14 @@ public class GameManager : MonoBehaviour
     private void OnApplicationQuit()
     {
         GameProgressManager.Instance.Save();
+    }
+
+    private void CheckGameOverConditions(int matchedCardsCount)
+    {
+        if(spawnedCards.Count == matchedCardsCount)
+        {
+            SoundManager.Instance.PlaySFX(SFXType.GameOver);
+            OnGameOver?.Invoke();
+        }
     }
 }

@@ -30,6 +30,9 @@ public class CardMatchController : MonoBehaviour
     /// </summary>
     private List<Card> pendingMatchEvalutionCards = new();
 
+    // Event triggered when a match occurs
+    public event System.Action<int> OnCardMatched;
+
     /// <summary>
     /// Called when a card is flipped; enqueues for matching.
     /// </summary>
@@ -49,7 +52,6 @@ public class CardMatchController : MonoBehaviour
             Card cardA = waitingCards[0];
             Card cardB = waitingCards[1];
             waitingCards.RemoveRange(0, 2);
-
             StartCoroutine(EvaluateMatch(cardA, cardB));
         }
     }
@@ -68,12 +70,15 @@ public class CardMatchController : MonoBehaviour
             matchedCards.Add(cardA);
             matchedCards.Add(cardB);
             scoreManager.RegisterMatch();
+            OnCardMatched?.Invoke(matchedCards.Count);
+            SoundManager.Instance.PlaySFX(SFXType.Match);
         }
         else
         {
             cardA.ResetCard();
             cardB.ResetCard();
             scoreManager.RegisterMismatch();
+            SoundManager.Instance.PlaySFX(SFXType.Mismatch);
         }
 
         pendingMatchEvalutionCards.Remove(cardA);
